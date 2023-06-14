@@ -1,0 +1,128 @@
+.form-row{
+  display: block;
+}
+
+.form-row .col{
+  width: 49%;
+  float: left;
+}
+
+
+.clearfix{
+  clear: both;
+}
+
+
+.program-card{
+  /* width: 45%; */
+  /* border: 1px solid #f4f4f4; */
+  /* border-radius: 5px; */
+  /* float: left; */
+  /* margin-right: 4%; */
+  text-align: center;
+  /* margin-bottom: 20px; */
+}
+
+.program-card-header{
+  background-color: #f3f3f3;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.program-card-header img{
+  border-radius: 100%;
+  width: 100px;
+  height: 100px;
+  float: left;
+}
+.program-card-header h3{
+  float: left;
+  vertical-align: bottom;
+}
+.program-card-body{
+  background-color: #ffffff;
+  width:100%;
+}
+
+.program-card-body h2{
+  font-size: 1rem;
+  padding:10px;
+
+}
+
+.program-card-body a{
+  font-size: 16px;
+  color: #e6a94a;
+}
+
+.university-container{
+  width: 100%;
+  display: block;
+}
+
+.university-card{
+  text-align: center;
+}
+
+
+.unipro-search-form input{
+  border: 1px solid #f4f4f4 !important;
+  color: #333 !important;
+}
+
+.unipro-search-form select{
+  border: 1px solid #f4f4f4 !important;
+  color: #333 !important;
+}
+
+
+.accordion-header {
+  cursor: pointer;
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
+.accordion-content {
+  display: none;
+  padding: 10px;
+}
+
+
+.uni_header {
+  background-color: #4b4e52;
+  padding: 1.5rem 1rem;
+  justify-content: space-around;
+  border-radius: 0.4rem;
+  margin-bottom: 3rem;
+}
+
+.uni_header .header__part {
+  align-items: center;
+  justify-content: center;
+  max-width: 11rem;
+}
+
+.header__part .header__part__title {
+  padding: 0;
+  margin: 0;
+  color: #e6a94a;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.header__part .header__part__data {
+  color: #fff;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 600px) {
+  .uni_header {
+    margin-bottom: 1rem;
+    align-items: center;
+    flex-direction: column;
+  }
+}

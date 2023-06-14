@@ -107,15 +107,31 @@ function unipro_program_custom_fields_output($post) {
     wp_nonce_field(basename(__FILE__), 'unipro_program_custom_fields_nonce');
 
     // Retrieve saved values from database
-    $program_fee = get_post_meta($post->ID, '_program_fee', true);
+		$program_current_fee = get_post_meta($post->ID, '_program_current_fee', true);
+		$program_discount_fee = get_post_meta($post->ID, '_program_discount_fee', true);
     $program_university = get_post_meta($post->ID, '_program_university', true);
     $program_area_of_study = get_post_meta($post->ID, '_program_area_of_study', true);
-    $program_degree = get_post_meta($post->ID, '_program_degree', true);
+		$program_degree = get_post_meta($post->ID, '_program_degree', true);
+		$program_thesis = get_post_meta($post->ID, '_program_thesis', true);
+		$program_duration = get_post_meta($post->ID, '_program_duration', true);
 
-    // Output fields
-    echo '<label for="program-fee">' . __('Tuition Fee', 'unipro') . '</label><br />';
-    echo '<input type="text" id="program-fee" name="program_fee" value="' . esc_attr($program_fee) . '" size="25" /><br /><br />';
-    $universities = get_posts(array(
+		// Output fields
+    echo '<label for="program-current-fee">' . __('Current Tuition Fee', 'unipro') . '</label><br />';
+    echo '<input type="text" id="program-current-fee" name="program_current_fee" value="' . esc_attr($program_current_fee) . '" size="25" /><br /><br />';
+
+		// Output fields
+    echo '<label for="program-discount-fee">' . __('Discounted Tuition Fee', 'unipro') . '</label><br />';
+    echo '<input type="text" id="program-discount-fee" name="program_discount_fee" value="' . esc_attr($program_discount_fee) . '" size="25" /><br /><br />';
+
+		// Output fields
+    echo '<label for="program-thesis">' . __('Thesis', 'unipro') . '</label><br />';
+    echo '<input type="text" id="program-thesis" name="program_thesis" value="' . esc_attr($program_thesis) . '" size="25" /><br /><br />';
+
+		// Output fields
+    echo '<label for="program-duration">' . __('Duration', 'unipro') . '</label><br />';
+    echo '<input type="text" id="program-duration" name="program_duration" value="' . esc_attr($program_duration) . '" size="25" /><br /><br />';
+
+		$universities = get_posts(array(
         'post_type' => 'unipro_university',
         'posts_per_page' => -1,
         'orderby' => 'title',
@@ -133,32 +149,31 @@ function unipro_program_custom_fields_output($post) {
     }
 
     echo '<div class="form-field">
-        <label for="university">University</label><br />
+        <label for="university">'._tr('University').'</label><br />
         <select name="program_university" id="program_university">
-            <option value="">Select a university</option>
+            <option value="">.'._tr('Select a university').'</option>
             '.$uni_list.'
         </select>
     </div>
     ';
 
 
-    echo '<div class="form-field"><label for="region">Region:</label><br />';
+    echo '<div class="form-field"><label for="region">'._tr('Region').':</label><br />';
 
     wp_dropdown_categories(array('taxonomy' => 'region', 'name' => 'region', 'class' => 'form-control'));
 
-        echo '</div><div class="form-field">
-        '.unipro_program_area_of_study(esc_attr($program_area_of_study)).'
-    </div>
-    ';
+    //     echo '</div><div class="form-field">
+    //     '.unipro_program_area_of_study(esc_attr($program_area_of_study)).'
+    // </div>
+    // ';
 
 
     echo '<div class="form-field">
         '.unipro_program_degree(esc_attr($program_degree)).'
     </div>
     ';
-
-
 }
+
 
 function unipro_save_program_custom_fields($post_id) {
     // Verify nonce
@@ -167,10 +182,13 @@ function unipro_save_program_custom_fields($post_id) {
     }
 
     // Save custom fields
-    update_post_meta($post_id, '_program_fee', sanitize_text_field($_POST['program_fee']));
+		update_post_meta($post_id, '_program_current_fee', sanitize_text_field($_POST['program_current_fee']));
+		update_post_meta($post_id, '_program_discount_fee', sanitize_text_field($_POST['program_discount_fee']));
     update_post_meta($post_id, '_program_university', sanitize_text_field($_POST['program_university']));
-    update_post_meta($post_id, '_program_area_of_study', sanitize_text_field($_POST['program_area_of_study']));
+    // update_post_meta($post_id, '_program_area_of_study', sanitize_text_field($_POST['program_area_of_study']));
     update_post_meta($post_id, '_program_degree', sanitize_text_field($_POST['program_degree']));
-    update_post_meta($post_id, '_program_region', sanitize_text_field($_POST['region']));
+		update_post_meta($post_id, '_program_region', sanitize_text_field($_POST['region']));
+		update_post_meta($post_id, '_program_duration', sanitize_text_field($_POST['program_duration']));
+		update_post_meta($post_id, '_program_thesis', sanitize_text_field($_POST['program_thesis']));
 }
 add_action('save_post_unipro_program', 'unipro_save_program_custom_fields');
