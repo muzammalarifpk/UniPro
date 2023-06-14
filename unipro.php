@@ -1,16 +1,17 @@
 <?php
 /**
  * Plugin Name: UniPro
- * Plugin URI: https://example.com/
+ * Text Domain: UniPro-Plugin
+ * Plugin URI: https://mediadesignexpert.com/
  * Description: A WordPress plugin for managing universities and programs.
- * Version: 1.0
- * Author: Your Name
- * Author URI: https://example.com/
+ * Version: 1.4
+ * Author: Muzammal Arif
+ * Author URI: https://muzammalarif.digital/
  * License: GPL2
  */
 
 // Define constants
-define( 'UNIPRO_VERSION', '1.0' );
+define( 'UNIPRO_VERSION', '1.4' );
 define( 'UNIPRO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'UNIPRO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -19,7 +20,7 @@ require_once UNIPRO_PLUGIN_DIR . 'includes/unipro-functions.php';
 require_once UNIPRO_PLUGIN_DIR . 'includes/unipro-settings.php';
 require_once UNIPRO_PLUGIN_DIR . 'includes/unipro-universities.php';
 require_once UNIPRO_PLUGIN_DIR . 'includes/unipro-programs.php';
-require_once UNIPRO_PLUGIN_DIR . 'includes/unipro-shortcodes.php';
+require_once UNIPRO_PLUGIN_DIR . 'includes/unipro-search.php';
 
 // Add menu items
 add_action( 'admin_menu', 'unipro_add_menus' );
@@ -123,3 +124,86 @@ function unipro_uninstall() {
   delete_option( 'unipro_languages' );
   delete_option( 'unipro_apikey' );
 }
+
+
+// Enqueue stylesheets
+function unipro_enqueue_styles() {
+    wp_enqueue_style( 'unipro-style', plugin_dir_url( __FILE__ ) . 'assets/css/style.css' );
+}
+add_action( 'wp_enqueue_scripts', 'unipro_enqueue_styles' );
+
+// Enqueue scripts
+function unipro_enqueue_scripts() {
+    wp_enqueue_script( 'unipro-script', plugin_dir_url( __FILE__ ) . 'assets/js/script.js', array( 'jquery' ), '1.0', true );
+}
+add_action( 'wp_enqueue_scripts', 'unipro_enqueue_scripts' );
+
+
+// Plugin activation hook
+function unipro_plugin_activation() {
+    // Register the template option for unipro_university custom post type
+    add_filter('theme_page_templates', 'unipro_add_template_option', 10, 4);
+}
+register_activation_hook(__FILE__, 'unipro_plugin_activation');
+
+// Add template selection dropdown to custom post type
+function unipro_add_template_option($post_templates, $wp_theme, $post, $post_type) {
+    // Add a custom template option for unipro_university post type
+    if ($post_type === 'unipro_university') {
+        $post_templates['custom-university-template.php'] = 'Custom University Template';
+    }
+    return $post_templates;
+}
+
+function custom_content_before_unipro_university($content) {
+
+  global $post;
+
+    if ($post && $post->post_type === 'unipro_university') {
+        $post_id = $post->ID;
+
+
+      $additional_content = '<div class="row unipro_uni_data">';
+
+      // $additional_content .= '<div class="col unipro_uni_phone">'.'_university_phone_number: '.get_post_meta($post_id, '_university_phone_number', true).'</div>';
+      // $additional_content .=  '<div class="col unipro_uni_city">'.'_university_cities: '.get_post_meta($post_id, '_university_cities', true).'</div>';
+      // $additional_content .= '<div class="col unipro_uni_address">'.'_university_address: '.get_post_meta($post_id, '_university_address', true).'</div>';
+
+
+      $additional_content .='<div class="uni_header row">
+        <div class="header__part col-lg-4 col-md-4 col-sm-4 col-12">
+          <!-- <img src="location-icon.png" class="header__part__icon" /> -->
+          <h2 class="header__part__title">'._tr('Address').'</h2>
+          <p class="header__part__data">'.get_post_meta($post_id, '_university_address', true).'</p>
+        </div>
+        <div class="header__part col-lg-4 col-md-4 col-sm-4 col-12">
+          <!-- <img src="worldwide-icon.png" class="header__part__icon" /> -->
+          <h2 class="header__part__title">'._tr('Website').'</h2>
+          <a href="'.get_post_meta($post_id, '_university_phone_number', true).'" class="header__part__data">'.get_post_meta($post_id, '_university_phone_number', true).'</a>
+        </div>
+        <div class="header__part col-lg-4 col-md-4 col-sm-4 col-12">
+          <!-- <img src="contact-icon.png" class="header__part__icon" /> -->
+          <h2 class="header__part__title">'._tr('Location').'</h2>
+          <p class="header__part__data">'.get_post_meta($post_id, '_university_cities', true).'</p>
+        </div>
+      </div>';
+
+      $additional_content .= '</div>';
+
+
+        // Add your custom content here
+        // $additional_content = '<p>This is some additional information about the university.</p>';
+
+        // Append the additional content before the original content
+        $content = $additional_content . $content;
+    }
+
+    return $content;
+}
+add_filter('the_content', 'custom_content_before_unipro_university');
+
+
+function load_plugin_UniProPlugin() {
+    load_plugin_textdomain('UniPro-Plugin', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+}
+add_action('plugins_loaded', 'load_plugin_UniProPlugin');
